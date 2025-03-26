@@ -1,5 +1,7 @@
 import { Client } from "pg";
 
+// const action = async () => {};
+
 const query = async (queryObject) => {
   const client = new Client({
     host: process.env.POSTGRES_HOST,
@@ -7,6 +9,8 @@ const query = async (queryObject) => {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
+    ssl: process.env.NODE_ENV === "development" ? false : true,
+    // ssl: { rejectUnauthorized: false },
   });
   console.log("Credenciais do Postgres:", {
     host: process.env.POSTGRES_HOST,
@@ -15,6 +19,7 @@ const query = async (queryObject) => {
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
   });
+
   try {
     await client.connect();
     const result = await client.query(queryObject);
