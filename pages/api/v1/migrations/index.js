@@ -4,6 +4,7 @@ import database from "infra/database";
 
 const migrations = async (req, res) => {
   const dbClient = await database.getNewClient();
+
   const defaultMigrationOptions = {
     dbClient: dbClient,
     dryRun: true,
