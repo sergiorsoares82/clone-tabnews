@@ -98,8 +98,6 @@ describe("PATCH /api/v1/users/[username]", () => {
     test("With unique 'username'", async () => {
       const createdUser = await orchestrator.createUser();
 
-      console.log(createdUser.username);
-
       const response = await fetch(
         `http://localhost:3000/api/v1/users/${createdUser.username}`,
         {
