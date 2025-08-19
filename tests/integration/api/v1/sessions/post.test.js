@@ -135,10 +135,10 @@ describe("POST /api/v1/sessions", () => {
       createdAt.setMilliseconds(0);
 
       expect(expiresAt - createdAt).toBe(session.EXPIRATION_IN_MILLISECONDS);
+
       const parsedSetCookie = setCookieParser(response, {
         map: true,
       });
-      console.log("parsedSetCookie:", parsedSetCookie);
 
       expect(parsedSetCookie.session_id).toEqual({
         name: "session_id",
