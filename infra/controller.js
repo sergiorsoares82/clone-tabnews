@@ -15,11 +15,12 @@ function onNoMatchHandler(req, res) {
 }
 
 function onErrorHandler(err, req, res) {
-  if (
-    err instanceof ValidationError ||
-    err instanceof NotFoundError ||
-    err instanceof UnauthorizedError
-  ) {
+  if (err instanceof ValidationError || err instanceof NotFoundError) {
+    return res.status(err.statusCode).json(err);
+  }
+
+  if (err instanceof UnauthorizedError) {
+    clearSessionCookie(res);
     return res.status(err.statusCode).json(err);
   }
 
@@ -43,9 +44,21 @@ async function setSessionCookie(res, sessionId) {
   res.setHeader("Set-Cookie", setCookie);
 }
 
+async function clearSessionCookie(response) {
+  const setCookie = cookie.serialize("session_id", "invalid", {
+    path: "/",
+    maxAge: -1,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  });
+
+  response.setHeader("Set-Cookie", setCookie);
+}
+
 const controller = {
   errorHandler: { onNoMatch: onNoMatchHandler, onError: onErrorHandler },
   setSessionCookie,
+  clearSessionCookie,
 };
 
 export default controller;
